@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { LogoutProtect, LoginProtect, setConfig } from "@authfunctions/react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Home from "./Sites/Home";
+import Register from "./Sites/Register";
+import Login from "./Sites/Login";
 
-function App() {
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+setConfig({
+  AUTHURL: "https://event-server.mk-return.de/auth",
+  APIURL: "http://localhost:5000/api",
+});
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/login">
+          <LogoutProtect>
+            <Login />
+          </LogoutProtect>
+        </Route>
+        <Route path="/register">
+          <LogoutProtect>
+            <Register />
+          </LogoutProtect>
+        </Route>
+        <Route path="/">
+          <LoginProtect>
+            <Home />
+          </LoginProtect>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
-
-export default App;
